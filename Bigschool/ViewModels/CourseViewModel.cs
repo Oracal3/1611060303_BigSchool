@@ -16,6 +16,7 @@ namespace Bigschool.ViewModels
         [FutureDate]
         public string Date { get; set; }
 
+        [ValidTime]
         [Required(ErrorMessage = "Not be empty")]
         public string Time { get; set; }
 
