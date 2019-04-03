@@ -9,6 +9,9 @@ namespace Bigschool.ViewModels
 {
     public class CourseViewModel
     {
+        public IEnumerable<Course> UpcomingCourses { get; set; }
+        public bool ShowAction { get; set; }
+
         [Required(ErrorMessage = "Not be empty")]
         public string Place { get; set; }
 
