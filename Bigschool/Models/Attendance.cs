@@ -12,7 +12,7 @@ namespace Bigschool.Models
         public Course Course { get; set; }
         [Key]
         [Column(Order = 1)]
-        public int CourseID { get; set; }
+        public int CourseId { get; set; }
 
         public ApplicationUser Attendee { get; set; }
         [Key]

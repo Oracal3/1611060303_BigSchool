@@ -1,27 +1,19 @@
-﻿@*@model IEnumerable<Bigschool.Models.Course>*@
-@model Bigschool.ViewModels.CoursesViewModel
+﻿@model Bigschool.ViewModels.CoursesViewModel
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Attending";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div class="row">
-    <ul>
-        @foreach (var course in Model.UpcomingCourses)
-        {
-            <li>@course.DateTime - @course.Lecturer.Name</li>
-            
-        }
-    </ul>
+<h2>Attending</h2>
     <ul class="course">
         @foreach (var course in Model.UpcomingCourses)
         {
             <li>
                 <div class="date">
                     <div class="month">
-                        @course.DateTime.ToString("dd")
+                        @course.DateTime.ToString("MM");
                     </div>
                     <div class="day">
-                        @course.DateTime.ToString("MM")
+                        @course.DateTime.ToString("dd");
                     </div>
                 </div>
                 <div class="details">
@@ -37,21 +29,20 @@
                     </span>
                     @if (Model.ShowAction)
                     {
-                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-a">Going?</button>
+                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
                     }
                 </div>
             </li>
         }
     </ul>
-</div>
+
 @section scripts
 {
     <script>
-        $(document).ready(function ()
-        {
-            $(".js-toggle-a").click(function (e) {
+        $(document).ready(function () {
+            $(".js-toggle-attendance").click(function (e) {
                 var button = $(e.target);
-                $post("/api/attendances", { courseId: button.attr("data-course-id") })
+                $post("/api/attendances", { couseId: button.attr("data-course-id") })
                 .done(function () {
                     button
                     .removeClass("btn-default")
@@ -76,3 +67,4 @@
         });
     </script>
 }
+

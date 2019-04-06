@@ -13,11 +13,10 @@ namespace Bigschool.ViewModels
         {
             DateTime datetime;
             var isValid = DateTime.TryParseExact(Convert.ToString(value),
-                "MM/dd/yyyy",
+                "dd/MM/yyyy",
                 CultureInfo.CurrentCulture,
                 DateTimeStyles.None,
                 out datetime);
-
             return (isValid && datetime > DateTime.Now);
         }
         }

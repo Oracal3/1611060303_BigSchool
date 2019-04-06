@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using Bigschool.ViewModels;
 
 namespace Bigschool.Controllers
 {
@@ -21,7 +22,13 @@ namespace Bigschool.Controllers
                 .Include(c => c.Lecturer)
                 .Include(c => c.Category)
                 .Where(c => c.DateTime > DateTime.Now);
-            return View(upcommingCoures);
+
+            var viewModel = new CoursesViewModel
+            {
+                UpcomingCourses = upcommingCoures,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+            return View(viewModel);
         }
 
         public ActionResult About()

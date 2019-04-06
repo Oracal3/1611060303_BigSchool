@@ -9,17 +9,14 @@ namespace Bigschool.ViewModels
 {
     public class CourseViewModel
     {
-        public IEnumerable<Course> UpcomingCourses { get; set; }
-        public bool ShowAction { get; set; }
-
         [Required(ErrorMessage = "Not be empty")]
         public string Place { get; set; }
 
         [Required(ErrorMessage = "Not be empty")]
-        [FutureDate]
+        [FutureDate(ErrorMessage = "Định dạng ngày sai")]
         public string Date { get; set; }
 
-        [ValidTime]
+        [ValidTime(ErrorMessage = "Định dạng giờ sai")]
         [Required(ErrorMessage = "Not be empty")]
         public string Time { get; set; }
 

@@ -19,7 +19,7 @@ namespace Bigschool.Controllers
             _dbContext = new ApplicationDbContext();
         }
 
-        public object ViewModel { get; private set; }
+        //public object ViewModel { get; private set; }
 
         [Authorize]
         public ActionResult Create()
@@ -37,7 +37,7 @@ namespace Bigschool.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CourseViewModel viewModel)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 viewModel.Categories = _dbContext.Categoris.ToList();
                 return View("Create", viewModel);
@@ -51,8 +51,40 @@ namespace Bigschool.Controllers
             };
             _dbContext.Courses.Add(course);
             _dbContext.SaveChanges();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
+        }
+        [Authorize]
+        public ActionResult Attending()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var courses = _dbContext.Attendances
+                .Where(a => a.AttendeeId == userId)
+                .Select(a => a.Course)
+                .Include(a => a.Lecturer)
+                .Include(a => a.Category)
+                .ToList();
+
+            var viewModel = new CoursesViewModel
+            {
+                UpcomingCourses = courses,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+            return View(viewModel);
+        }
+
+        [Authorize]
+        public ActionResult Mine()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var courses = _dbContext.Courses
+                .Where(c => c.LecturerID == userId && c.DateTime > DateTime.Now)
+                .Include(l => l.Lecturer)
+                .Include(c => c.Category)
+                .ToList();
+
+            return View(courses);
+        }
     }
-        
-}
 }
