@@ -32,7 +32,6 @@ namespace Bigschool.Controllers
                 AttendeeId = userId
             };
 
-
             _dbContext.Attendances.Add(attendance);
             _dbContext.SaveChanges();
             return Ok();

@@ -5,69 +5,69 @@
 }
 
 <div class="row">
-    <ul>
-        @foreach (var course in Model.UpcomingCourses)
-        {
-            <li>@course.DateTime - @course.Lecturer.Name</li>
-            
-        }
-    </ul>
+
     <ul class="course">
         @foreach (var course in Model.UpcomingCourses)
         {
-            <li>
-                <div class="date">
-                    <div class="month">
-                        @course.DateTime.ToString("dd")
+            if (course.IsCanceled == false)
+            {
+                <li>
+                    <div class="date">
+                        <div class="month">
+                            @course.DateTime.ToString("dd")
+                        </div>
+                        <div class="day">
+                            @course.DateTime.ToString("MM")
+                        </div>
                     </div>
-                    <div class="day">
-                        @course.DateTime.ToString("MM")
-                    </div>
-                </div>
-                <div class="details">
-                    <span class="lecturer">
-                        @course.Lecturer.Name
+                    <div class="details">
+                        <span class="lecturer">
+                            @course.Lecturer.Name
+                            @if (Model.ShowAction)
+                            {
+                                <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Follow</button>
+                            }
+                        </span>
+                        <span class="category">
+                            @course.Category.Name
+                        </span>
                         @if (Model.ShowAction)
                         {
-                            <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Follow</button>
+                            <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
                         }
-                    </span>
-                    <span class="category">
-                        @course.Category.Name
-                    </span>
-                    @if (Model.ShowAction)
-                    {
-                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-a">Going?</button>
-                    }
-                </div>
-            </li>
+                    </div>
+                </li>
+            }
+
         }
     </ul>
 </div>
 @section scripts
 {
     <script>
-        $(document).ready(function ()
-        {
-            $(".js-toggle-a").click(function (e) {
+        $(document).ready(function () {
+            $(".js-toggle-attendance").click(function (e) {
                 var button = $(e.target);
-                $post("/api/attendances", { courseId: button.attr("data-course-id") })
-                .done(function () {
-                    button
-                    .removeClass("btn-default")
-                    .addClass("btn-info")
-                    .text("Going");
-                })
-                .fail(function () {
-                    alert("Something failed!");
-                });
+                $.post("/api/attendances", { courseId: button.attr("data-course-id") })
+                    .done(function () {
+                        button
+                            .removeClass("btn-default")
+                            .addClass("btn-info")
+                            .text("Going");
+                    })
+                    .fail(function () {
+                        alert("Something failed!");
+                    });
             });
 
             $(".js-toggle-follow").click(function (e) {
                 var button = $(e.target);
                 $.post("/api/followings", { followeeId: button.attr("data-user-id") })
                     .done(function () {
-                        button.text("Following");
+                        button
+                            .removeClass("btn-default")
+                            .addClass("btn-info")
+                            .text("Following");
                     })
                     .fail(function () {
                         alert("Something failed");

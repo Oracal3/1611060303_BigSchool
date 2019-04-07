@@ -26,11 +26,51 @@ namespace Bigschool.Controllers
         {
             var viewModel = new CourseViewModel
             {
-                Categories = _dbContext.Categoris.ToList()
+                Categories = _dbContext.Categoris.ToList(),
+                Heading = "Add Course"
             };
             return View(viewModel);
         }
 
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+            var userId = User.Identity.GetUserId();
+            var course = _dbContext.Courses.Single(c => c.Id == id && c.LecturerID == userId);
+
+            var viewModel = new CourseViewModel
+            {
+                Categories = _dbContext.Categoris.ToList(),
+                Date = course.DateTime.ToString("dd/MM/yyyy"),
+                Time = course.DateTime.ToString("HH:mm"),
+                Category = course.CategoryId,
+                Place = course.Place,
+                Heading = "Edit Course",
+                Id = course.Id
+            };
+            return View("Create", viewModel);
+        }
+        //GET : Update
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(CourseViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Categories = _dbContext.Categoris.ToList();
+                return View("Create", viewModel);
+            }
+            var userId = User.Identity.GetUserId();
+            var course = _dbContext.Courses.Single(c => c.Id == viewModel.Id && c.LecturerID == userId);
+
+            course.Place = viewModel.Place;
+            course.DateTime = viewModel.GetDatetime();
+            course.CategoryId = viewModel.Category;
+
+            _dbContext.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
         // GET: Courses
         [Authorize]
         [HttpPost]

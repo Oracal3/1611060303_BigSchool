@@ -30,12 +30,12 @@ namespace Bigschool.Models
                 .HasRequired(a => a.Course)
                 .WithMany()
                 .WillCascadeOnDelete(false);
-           
-
+            
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Followers)
                 .WithRequired(f => f.Followee)
                 .WillCascadeOnDelete(false);
+
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Followees)

@@ -3,10 +3,11 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using (Html.BeginForm("Create", "Courses"))
+@using (Html.BeginForm(Model.Action, "Courses"))
 {
     <h2>Tạo khóa học</h2>
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m=>m.Id)
     <form>
         <div class="form-group">
             @Html.LabelFor(m => m.Place)
