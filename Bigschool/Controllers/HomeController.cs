@@ -33,7 +33,7 @@ namespace Bigschool.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Nguyễn Quang Trung - 1611060303";
 
             return View();
         }
