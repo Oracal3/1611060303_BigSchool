@@ -11,18 +11,22 @@ namespace Bigschool.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Not be empty")]
+        [Display(Name ="Địa điểm")]
+        [Required(ErrorMessage ="Không được để trống")]
         public string Place { get; set; }
 
-        [Required(ErrorMessage = "Not be empty")]
-        [FutureDate(ErrorMessage = "Định dạng ngày sai")]
+        [Display(Name = "Ngày")]
+        [Required(ErrorMessage = "Không được để trống")]
+        [FutureDate(ErrorMessage = "Định dạng ngày sai (Ngày/tháng/năm)")]
         public string Date { get; set; }
 
-        [ValidTime(ErrorMessage = "Định dạng giờ sai")]
-        [Required(ErrorMessage = "Not be empty")]
+        [Display(Name = "Thời gian")]
+        [ValidTime(ErrorMessage = "Định dạng giờ sai (giờ:phút)")]
+        [Required(ErrorMessage = "Không được để trống")]
         public string Time { get; set; }
 
-        [Required(ErrorMessage = "Not be empty")]
+        [Display(Name = "Nội dung khóa học")]
+        [Required(ErrorMessage = "Không được để trống")]
         public byte Category { get; set; }
         public IEnumerable<Category> Categories { get; set; }
         public string Heading { get; set; }

@@ -3,7 +3,8 @@
 @{
     ViewBag.Title = "Home Page";
 }
-@{ 
+@{
+    var att = Model.attandence.ToList();
     var fl = Model.following.ToList();
     var course1 = Model.UpcomingCourses.ToList();
 }
@@ -27,18 +28,21 @@
                     <div class="details">
                         <span class="lecturer">
                             @course.Lecturer.Name
-                            @foreach (var acc in fl)
+                            @if (Model.ShowAction)
                             {
-                                if (Model.ShowAction)
+                                var x = 0;
+                                foreach (var acc in fl)
                                 {
-                                    if (course.LecturerID == acc.FolloweeId )
+
+                                    if (acc.FolloweeId == course.LecturerID)
                                     {
-                                        <button class="btn btn-success btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Follow</button>
+                                        x = x + 1;
+                                        <button class="btn btn-success btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Đang theo dõi</button>
                                     }
-                                    else
-                                    {
-                                        <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Follow</button>
-                                    }
+                                }
+                                if (x == 0)
+                                {
+                                    <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Theo dõi</button>
                                 }
                             }
 
@@ -48,7 +52,21 @@
                         </span>
                         @if (Model.ShowAction)
                         {
-                            <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
+                            var x = 0;
+                            foreach (var a in att)
+                            {
+                                if (a.CourseId == course.Id)
+                                {
+                                    x = x + 1;
+                                    <button data-course-id="@course.Id" class="btn btn-success btn-sm js-toggle-attendance">Đã đăng ký</button>
+
+                                }
+                            }
+                            if (x == 0)
+                            {
+                                <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Đăng ký?</button>
+
+                            }
                         }
                     </div>
                 </li>
@@ -66,8 +84,8 @@
                     .done(function () {
                         button
                             .removeClass("btn-default")
-                            .addClass("btn-info")
-                            .text("Going");
+                            .addClass("btn-success")
+                            .text("Đã Đăng ký");
                     })
                     .fail(function () {
                         alert("Something failed!");
@@ -80,8 +98,8 @@
                     .done(function () {
                         button
                             .removeClass("btn-default")
-                            .addClass("btn-info")
-                            .text("Following");
+                            .addClass("btn-success")
+                            .text("Đang theo dõi");
                     })
                     .fail(function () {
                         alert("Something failed");

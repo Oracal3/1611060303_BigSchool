@@ -28,8 +28,13 @@ namespace Bigschool.Controllers
             var fl = _dbContext.Followings
                .Include(c => c.Followee)
                .Where(c => c.FollowerId == userId);
+
+            var att = _dbContext.Attendances
+               .Include(c => c.Attendee)
+               .Where(c => c.AttendeeId == userId);
             var viewModel = new CoursesViewModel
             {
+                attandence = att,
                 following = fl,
                 UpcomingCourses = upcommingCoures,
                 ShowAction = User.Identity.IsAuthenticated
