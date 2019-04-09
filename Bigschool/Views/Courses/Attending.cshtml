@@ -10,23 +10,21 @@
             <li>
                 <div class="date">
                     <div class="month">
-                        @course.DateTime.ToString("MM")
+                        @course.DateTime.ToString("dd")
                     </div>
                     <div class="day">
-                        @course.DateTime.ToString("dd")
+                        @course.DateTime.ToString("MM")
                     </div>
                 </div>
                 <div class="details">
                     <span class="lecturer">
                         @course.Lecturer.Name
-                        @if (Model.ShowAction)
-                        {
-                            <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerID">Follow</button>
-                        }
                     </span>
+                    <br />
                     <span class="category">
                         @course.Category.Name
                     </span>
+                    <a href="#" class="btn btn-default btn-sm js-toggle-cancel" data-user-id="@course.CategoryId">cancel</a>
                     
                 </div>
             </li>
@@ -36,32 +34,28 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
-            $(".js-toggle-attendance").click(function (e) {
-                var button = $(e.target);
-                $post("/api/attendances", { couseId: button.attr("data-course-id") })
-                .done(function () {
-                    button
-                    .removeClass("btn-default")
-                    .addClass("btn-info")
-                    .text("Going");
-                })
-                .fail(function () {
-                    alert("Something failed!");
+            $(document).ready(function () {
+                $(".js-toggle-cancel").click(function (e) {
+                    e.preventDefault();d
+                    var link = $(e.target);
+                    bootbox.confirm("Are you sure to cancel?",
+                        function () {
+                            $.ajax({
+                                url: "/api/delete/" + link.attr("data-course-id"),
+                                method: "DELETE"
+                            })
+                                .done(function () {
+                                    link.parent("li").fadeOut(function () {
+                                        $(this).remove();
+                                    })
+                                })
+                                .fail(function () {
+                                    alert("Something failed!");
+                                });
+                        });
                 });
-            });
-
-            $(".js-toggle-follow").click(function (e) {
-                var button = $(e.target);
-                $.post("/api/followings", { followeeId: button.attr("data-user-id") })
-                    .done(function () {
-                        button.text("Following");
-                    })
-                    .fail(function () {
-                        alert("Something failed");
-                    });
-            });
         });
+               
     </script>
 }
 
