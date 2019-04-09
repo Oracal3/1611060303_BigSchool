@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using Bigschool.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace Bigschool.Controllers
 {
@@ -23,8 +24,13 @@ namespace Bigschool.Controllers
                 .Include(c => c.Category)
                 .Where(c => c.DateTime > DateTime.Now);
 
+            var userId = User.Identity.GetUserId();
+            var fl = _dbContext.Followings
+               .Include(c => c.Followee)
+               .Where(c => c.FollowerId == userId);
             var viewModel = new CoursesViewModel
             {
+                following = fl,
                 UpcomingCourses = upcommingCoures,
                 ShowAction = User.Identity.IsAuthenticated
             };
