@@ -37,14 +37,16 @@ namespace Bigschool.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        
+        [HttpPost]
         public IHttpActionResult Cancel(int id)
         {
             var userId = User.Identity.GetUserId();
-            var course = _dbContext.Attendances.Single(c => c.CourseId == id && c.AttendeeId == userId);
+            var course = _dbContext.Attendances.SingleOrDefault(c => c.CourseId == id && c.AttendeeId == userId);
 
             _dbContext.Attendances.Remove(course);
             _dbContext.SaveChanges();
+            
             return Ok();
         }
     }

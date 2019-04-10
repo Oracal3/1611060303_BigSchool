@@ -4,58 +4,69 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h2>Khóa học đã đăng ký</h2>
-    <ul class="course">
-        @foreach (var course in Model.UpcomingCourses)
-        {
-            <li>
-                <div class="date">
-                    <div class="month">
-                        @course.DateTime.ToString("dd")
-                    </div>
-                    <div class="day">
-                        @course.DateTime.ToString("MM")
-                    </div>
+<ul class="course">
+    @foreach (var course in Model.UpcomingCourses)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @course.DateTime.ToString("dd")
                 </div>
-                <div class="details">
-                    <span class="lecturer">
-                        @course.Lecturer.Name
-                    </span>
-                    <br />
-                    <span class="category">
-                        @course.Category.Name
-                    </span>
-                    <a href="#" class="btn btn-default btn-sm js-toggle-cancel" data-user-id="@course.CategoryId">cancel</a>
-                    
+                <div class="day">
+                    @course.DateTime.ToString("MM")
                 </div>
-            </li>
-        }
-    </ul>
+            </div>
+            <div class="details">
+                <span class="lecturer">
+                    @course.Lecturer.Name
+                </span>
+                <br />
+                <span class="category">
+                    @course.Category.Name
+                </span>
+                @*<a href="@Url.Action("Cancel","Attendances",new {@id = @course.Id })" class="btn btn-default">cancel</a>*@
+
+                @*<a href="#" class="btn btn-default btn-sm js-toggle-cancel" data-user-id="@course.CategoryId">cancel</a>*@
+                @Ajax.ActionLink("Hủy","Delete",new { @id = course.Id },new AjaxOptions
+           {
+               Confirm="Bạn có muốn hủy khóa học này?",
+               OnComplete="$('#row_"+ course.Id + "').remove()",
+               HttpMethod="Delete"
+           })
+            </div>
+        </li>
+    }
+</ul>
 
 @section scripts
 {
     <script>
-            $(document).ready(function () {
-                $(".js-toggle-cancel").click(function (e) {
-                    e.preventDefault();
-                    var link = $(e.target);
-                    bootbox.confirm("Are you sure to cancel?",
-                        function () {
-                            $.ajax({
-                                url: "/api/delete/" + link.attr("data-course-id"),
-                                method: "DELETE"
+        $(document).ready(function () {
+            $(".js-toggle-cancel").click(function (e) {
+                e.preventDefault();
+                var link = $(e.target);
+                var a = bootbox.confirm("Are you sure to cancel?");
+                if (a) {
+
+                    $.ajax({
+                        url: "Cancel" + link.attr("data-course-id"),
+                        method: "DELETE"
+
+                    })
+                        .done(function () {
+                            link.parent("li").fadeOut(function () {
+                                $(this).remove();
                             })
-                                .done(function () {
-                                    link.parent("li").fadeOut(function () {
-                                        $(this).remove();
-                                    })
-                                })
-                                .fail(function () {
-                                    alert("Something failed!");
-                                });
+                        })
+                        .fail(function () {
+                            alert("Something failed!");
                         });
-                });
+
+                }
+                else { }
+            });
         });
-               
+
     </script>
 }
 
